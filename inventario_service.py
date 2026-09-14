@@ -51,3 +51,5 @@ class InventarioService:
             raise ValueError("No puedes eliminar algo que no existe")
         self.repository.eliminar(id)
         
+    def obtener_productos(self):
+        return self.repository.obtener_todos()
