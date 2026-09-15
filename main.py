@@ -103,6 +103,37 @@ def eliminar_producto():
     except ValueError as error:
         print(error)
         
+#opcion7
+def modificar_producto():
+    print("\n--- MODIFICAR PRODUCTO ---")
+
+    try:
+        id_prod = int(input("Ingresa el ID del producto: "))
+
+        producto = service.buscar_producto(id_prod)
+
+        print("\nDatos actuales:")
+        producto.mostrar_info()
+
+        print("\nIngresa los nuevos datos:")
+
+        nombre = input("Nuevo nombre: ")
+        precio = float(input("Nuevo precio: "))
+        categoria = input("Nueva categoría: ")
+
+        producto = service.modificar_producto(
+            id_prod,
+            nombre,
+            precio,
+            categoria
+        )
+
+        print("\nProducto actualizado correctamente.")
+        producto.mostrar_info()
+
+    except ValueError as error:
+        print(f"Error: {error}")
+        
         
 def menu():
 
@@ -115,7 +146,8 @@ def menu():
         print("4. Aumentar stock")
         print("5. Disminuir stock")
         print("6. Eliminar producto")
-        print("7. Salir")
+        print("7. Modificar producto")
+        print("8. Salir")
 
         opcion = input("Selecciona una opción: ")
 
@@ -138,6 +170,9 @@ def menu():
             eliminar_producto()
 
         elif opcion == "7":
+            modificar_producto()
+
+        elif opcion == "8":
             print("Hasta luego.")
             break
 
