@@ -20,3 +20,6 @@ class ProductoUpdate(BaseModel):
     nombre: str
     precio: float
     categoria: str
+    
+class StockUpdate(BaseModel):
+    cantidad: int

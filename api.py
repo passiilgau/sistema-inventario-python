@@ -1,11 +1,12 @@
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
-
 from database import crear_tabla
 from produto_repository import ProductoRepository
 from inventario_service import InventarioService
-from schemas import ProductoCreate, ProductoResponse, ProductoUpdate
+from schemas import ProductoCreate, ProductoResponse, ProductoUpdate, StockUpdate
 from fastapi import FastAPI, HTTPException
 from producto import Producto
+
 
 
 app = FastAPI(title="Sistema de Inventario")
@@ -14,6 +15,14 @@ crear_tabla()
 
 repository = ProductoRepository()
 service = InventarioService(repository)
+
+app.add_middleware(
+    CORSMiddleware,
+    # Ese puerto 5500 es el clásico del "Live Server" de VS Code. ¡Está perfecto!
+    allow_origins=["http://127.0.0.1:5500"],  
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/")
@@ -81,4 +90,44 @@ def modificar_producto(id: int, datos: ProductoUpdate):
             status_code=404,
             detail=str(error)
         )
+        
+@app.patch("/productos/{id}/stock/aumentar", response_model=ProductoResponse)
+def aumentar_stock(id: int, datos: StockUpdate):
 
+    try:
+        producto = service.aumentar_stock(id, datos.cantidad)
+        return producto
+
+    except ValueError as error:
+        raise HTTPException(
+            status_code=400,
+            detail=str(error)
+        )
+@app.patch("/productos/{id}/stock/disminuir", response_model=ProductoResponse)
+def disminuir_stock(id: int, datos: StockUpdate):
+
+    try:
+        producto = service.disminuir_stock(id, datos.cantidad)
+        return producto
+
+    except ValueError as error:
+        raise HTTPException(
+            status_code=400,
+            detail=str(error)
+        )
+        
+@app.delete("/productos/{id}")
+def eliminar_producto(id: int):
+
+    try:
+        service.eliminar_producto(id)
+
+        return {
+            "mensaje": f"Producto con ID {id} eliminado correctamente."
+        }
+
+    except ValueError as error:
+        raise HTTPException(
+            status_code=404,
+            detail=str(error)
+        )

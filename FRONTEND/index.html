@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Inventario</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="app-header">
+    <div class="app-header__title">
+      <h1>Sistema de Inventario</h1>
+      <p>Gestión de productos, precios y stock</p>
+    </div>
+    <div class="api-status" id="apiStatus">
+      <span class="api-status__dot" id="apiStatusDot"></span>
+      <span id="apiStatusText">Conectando con la API…</span>
+    </div>
+  </header>
+
+  <main class="app-main">
+
+    <!-- ===== DASHBOARD (TARJETAS) ===== -->
+    <section class="dashboard" aria-label="Resumen del inventario">
+      <div class="card">
+        <span class="card__label">Total de productos</span>
+        <span class="card__value" id="cardTotalProductos">—</span>
+      </div>
+      <div class="card">
+        <span class="card__label">Stock total</span>
+        <span class="card__value" id="cardStockTotal">—</span>
+      </div>
+      <div class="card card--warning">
+        <span class="card__label">Stock bajo (&lt; 5 uds.)</span>
+        <span class="card__value" id="cardStockBajo">—</span>
+      </div>
+      <div class="card">
+        <span class="card__label">Valor del inventario</span>
+        <span class="card__value" id="cardValorInventario">—</span>
+      </div>
+    </section>
+
+    <!-- ===== TOOLBAR: BUSCADOR + NUEVO PRODUCTO ===== -->
+    <section class="toolbar">
+      <div class="search">
+        <input
+          type="search"
+          id="searchInput"
+          placeholder="Buscar por nombre o categoría…"
+          aria-label="Buscar productos"
+        >
+      </div>
+      <button class="btn btn--primary" id="btnNuevoProducto" type="button">
+        + Nuevo producto
+      </button>
+    </section>
+
+    <!-- ===== MENSAJES / FEEDBACK ===== -->
+    <div id="feedback" class="feedback" role="status" aria-live="polite"></div>
+
+    <!-- ===== TABLA DE PRODUCTOS ===== -->
+    <section class="table-section">
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Precio</th>
+              <th>Stock</th>
+              <th>Categoría</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="productosTableBody">
+            <!-- Filas generadas por JavaScript -->
+          </tbody>
+        </table>
+      </div>
+
+      <p id="tableEmptyState" class="table-empty" hidden>
+        No hay productos registrados todavía.
+      </p>
+      <p id="tableLoadingState" class="table-loading">
+        Cargando productos…
+      </p>
+    </section>
+
+  </main>
+
+  <!-- ===== MODAL: CREAR / EDITAR PRODUCTO ===== -->
+  <div class="modal-overlay" id="modalOverlay" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal__header">
+        <h2 id="modalTitle">Nuevo producto</h2>
+        <button class="modal__close" id="btnCerrarModal" type="button" aria-label="Cerrar">✕</button>
+      </div>
+
+      <form id="productoForm" class="product-form" novalidate>
+        <input type="hidden" id="formModo" value="crear">
+
+        <div class="form-field">
+          <label for="formId">ID</label>
+          <input type="number" id="formId" min="1" step="1" required>
+          <span class="form-error" id="errorId"></span>
+        </div>
+
+        <div class="form-field">
+          <label for="formNombre">Nombre</label>
+          <input type="text" id="formNombre" required>
+          <span class="form-error" id="errorNombre"></span>
+        </div>
+
+        <div class="form-field">
+          <label for="formPrecio">Precio</label>
+          <input type="number" id="formPrecio" min="0.01" step="0.01" required>
+          <span class="form-error" id="errorPrecio"></span>
+        </div>
+
+        <div class="form-field">
+          <label for="formStock">Stock</label>
+          <input type="number" id="formStock" min="0" step="1" required>
+          <span class="form-error" id="errorStock"></span>
+        </div>
+
+        <div class="form-field">
+          <label for="formCategoria">Categoría</label>
+          <input type="text" id="formCategoria" required>
+          <span class="form-error" id="errorCategoria"></span>
+        </div>
+
+        <div class="modal__actions">
+          <button type="button" class="btn btn--ghost" id="btnCancelarForm">Cancelar</button>
+          <button type="submit" class="btn btn--primary" id="btnGuardarForm">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: CONFIRMAR ELIMINACIÓN ===== -->
+  <div class="modal-overlay" id="confirmOverlay" hidden>
+    <div class="modal modal--small" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+      <div class="modal__header">
+        <h2 id="confirmTitle">Eliminar producto</h2>
+      </div>
+      <p id="confirmMessage" class="confirm-message"></p>
+      <div class="modal__actions">
+        <button type="button" class="btn btn--ghost" id="btnCancelarConfirm">Cancelar</button>
+        <button type="button" class="btn btn--danger" id="btnConfirmarEliminar">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
