@@ -1,6 +1,4 @@
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi import FastAPI
-from database import crear_tabla
 from produto_repository import ProductoRepository
 from inventario_service import InventarioService
 from schemas import ProductoCreate, ProductoResponse, ProductoUpdate, StockUpdate
@@ -10,8 +8,6 @@ from producto import Producto
 
 
 app = FastAPI(title="Sistema de Inventario")
-
-crear_tabla()
 
 repository = ProductoRepository()
 service = InventarioService(repository)

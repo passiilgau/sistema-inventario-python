@@ -2,3 +2,4 @@ inventario.db
 __pycache__/
 .venv/
 venv/
+.env
