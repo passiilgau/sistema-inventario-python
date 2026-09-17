@@ -17,6 +17,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 password_hash = PasswordHash.recommended()
 
+
 def hash_password(password: str) -> str:
     return password_hash.hash(password)
 
