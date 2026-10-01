@@ -1,0 +1,1 @@
+"""Entidades de dominio puras."""

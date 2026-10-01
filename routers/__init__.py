@@ -1,0 +1,1 @@
+"""Endpoints HTTP de FastAPI."""
